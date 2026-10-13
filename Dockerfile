@@ -8,8 +8,8 @@ COPY requirements.txt .
 RUN python -m pip install -U pip wheel && \
     pip install -r requirements.txt
 
-# Copy source files
-COPY service ./service
+# Copy all application files into the Docker image
+COPY . .
 
 # Become non-root user for security best practices
 RUN useradd -m -r service && \
@@ -19,4 +19,6 @@ USER service
 # Run the service on port 8080
 ENV PORT 8080
 EXPOSE $PORT
+
+# Run the application
 CMD ["gunicorn", "--bind=0.0.0.0:8080", "--log-level=info", "service:app"]
