@@ -9,7 +9,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY service/ ./service/
 
 # Switch to a non-root user
-RUN useradd --uid 1000 --gid 0 -s /bin/bash -m -d /home/appuser appuser
+RUN useradd --uid 1000 --gid 0 -s /bin/bash -m -d /home/appuser appuser && \
+    chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 8080
