@@ -1,24 +1,17 @@
 FROM python:3.9-slim
 
-# Establish a working folder
+# Create working folder and install dependencies
 WORKDIR /app
-
-# Install dependencies
 COPY requirements.txt .
-RUN python -m pip install -U pip wheel && \
-    pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all application files into the Docker image
-COPY . .
+# Copy the application contents
+COPY service/ ./service/
 
-# Become non-root user for security best practices
-RUN useradd -m -r service && \
-    chown -R service:service /app
-USER service
+# Switch to a non-root user
+RUN useradd --uid 1000 --gid 0 -s /bin/bash -m -d /home/appuser appuser
+USER appuser
 
-# Run the service on port 8080
-ENV PORT 8080
-EXPOSE $PORT
+EXPOSE 8080
 
-# Run the application
 CMD ["gunicorn", "--bind=0.0.0.0:8080", "--log-level=info", "service:app"]

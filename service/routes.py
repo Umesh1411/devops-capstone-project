@@ -131,6 +131,22 @@ def delete_accounts(account_id):
 
 
 ######################################################################
+# DELETE ALL ACCOUNTS (used for testing / admin)
+######################################################################
+@app.route("/accounts", methods=["DELETE"])
+def delete_all_accounts():
+    """
+    Delete All Accounts
+    This endpoint will delete all Accounts
+    """
+    app.logger.info("Request to delete all Accounts")
+    Account.query.delete()
+    from service.models import db
+    db.session.commit()
+    return "", status.HTTP_204_NO_CONTENT
+
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 def check_content_type(media_type):
