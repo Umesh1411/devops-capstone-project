@@ -107,6 +107,12 @@ class TestAccount(unittest.TestCase):
         account = Account.find(account.id)
         self.assertEqual(account.email, "XYZZY@plugh.com")
 
+    def test_update_empty_id(self):
+        """It should not Update an account with an empty ID"""
+        account = AccountFactory()
+        account.id = None
+        self.assertRaises(DataValidationError, account.update)
+
     def test_delete_an_account(self):
         """It should Delete an account from the database"""
         accounts = Account.all()
